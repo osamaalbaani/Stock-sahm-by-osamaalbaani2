@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>حاسبة السكالبينغ</title>
+<style>
+body {
+    font-family: Arial;
+    background: #111;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+input, select, button {
+    padding: 10px;
+    margin: 10px;
+    width: 220px;
+    font-size: 16px;
+}
+button {
+    cursor: pointer;
+}
+.result {
+    margin-top: 20px;
+    font-size: 18px;
+    background: #222;
+    padding: 15px;
+    border-radius: 10px;
+}
+.copy-btn {
+    width: auto;
+    padding: 5px 10px;
+    font-size: 14px;
+    margin-left: 5px;
+}
+</style>
+</head>
+<body>
+
+<h2>📊 حاسبة الدخول ووقف الخسارة وجني الأرباح</h2>
+
+<select id="type">
+    <option value="long">شراء (Long / Spot)</option>
+    <option value="short">بيع (Short)</option>
+</select><br>
+
+<input type="number" id="entry" placeholder="سعر الدخول"><br>
+<input type="number" id="tpPercent" placeholder="نسبة جني الأرباح %"><br>
+<input type="number" id="slPercent" placeholder="نسبة وقف الخسارة %"><br>
+
+<button onclick="calculate()">احسب</button>
+
+<div class="result" id="output"></div>
+
+<script>
+function calculate() {
+    let type = document.getElementById("type").value;
+    let entry = parseFloat(document.getElementById("entry").value);
+    let tpPercent = parseFloat(document.getElementById("tpPercent").value) / 100;
+    let slPercent = parseFloat(document.getElementById("slPercent").value) / 100;
+
+    if (!entry || !tpPercent || !slPercent) {
+        document.getElementById("output").innerHTML = "⚠️ تأكد من إدخال جميع القيم";
+        return;
+    }
+
+    let tpPrice, slPrice;
+
+    if (type === "long") {
+        tpPrice = entry + (entry * tpPercent);
+        slPrice = entry - (entry * slPercent);
+    } else {
+        tpPrice = entry - (entry * tpPercent);
+        slPrice = entry + (entry * slPercent);
+    }
+
+    document.getElementById("output").innerHTML = `
+        📍 سعر الدخول: ${entry.toFixed(4)} 
+        <button class="copy-btn" onclick="copyText('${entry.toFixed(4)}')">نسخ</button><br><br>
+
+        🎯 جني الأرباح: ${tpPrice.toFixed(4)} 
+        <button class="copy-btn" onclick="copyText('${tpPrice.toFixed(4)}')">نسخ</button><br><br>
+
+        🛑 وقف الخسارة: ${slPrice.toFixed(4)} 
+        <button class="copy-btn" onclick="copyText('${slPrice.toFixed(4)}')">نسخ</button>
+    `;
+}
+
+function copyText(text) {
+    navigator.clipboard.writeText(text);
+    alert("✅ تم نسخ السعر: " + text);
+}
+</script>
+
+</body>
+</html>
